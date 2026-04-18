@@ -57,3 +57,32 @@ add_compile_definitions(PS3 __PS3__)
 SET(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-nostartfiles -Wl,-r -Wl,-d")
 SET(PS3 1)
 SET(PLATFORM_PS3 1)
+
+# Build PS3 SELF file
+function(build_ps3_self target)
+    set(ELF_FILE $<TARGET_FILE:${target}>)
+    set(STRIPPED_ELF ${ELF_FILE}.stripped.elf)
+    set(SELF_FILE ${ELF_FILE}.self)
+    set(FSELF_FILE ${ELF_FILE}.fake.self)
+
+    add_custom_command(
+        TARGET ${target}
+        POST_BUILD
+        COMMAND echo "Running PS3 post-build steps..."
+
+        # 1. Fix OPD relocations FIRST, before anything else
+        COMMAND ${PS3DEV}/bin/sprxlinker ${ELF_FILE}
+
+        # 2. Strip AFTER sprxlinker, preserve OPD with -R flag
+        COMMAND ${PS3DEV}/ppu/bin/powerpc64-ps3-elf-strip
+            --strip-debug          # only strip debug, keep OPD symbols
+            ${ELF_FILE}
+            -o ${STRIPPED_ELF}
+
+        # 3. Package the STRIPPED elf into SELF
+        COMMAND ${PS3DEV}/bin/make_self ${STRIPPED_ELF} ${SELF_FILE}
+        COMMAND ${PS3DEV}/bin/fself ${STRIPPED_ELF} ${FSELF_FILE}
+
+        COMMAND echo "Done: ${SELF_FILE}"
+    )
+endfunction()
