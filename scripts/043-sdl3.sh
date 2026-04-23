@@ -26,6 +26,6 @@ mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 echo "Building for PPC..."
 
-cmake -Wno-dev -DCMAKE_TOOLCHAIN_FILE="../../depends/ps3build.cmake" -DCMAKE_INSTALL_PREFIX="$PS3DEV/portlibs/ppu" -DCMAKE_PREFIX_PATH="$PS3DEV/portlibs/ppu" -DSDL_TESTS=OFF  -DSDL_EXAMPLES=OFF -DSDL_TEST_LIBRARY=OFF -DSDL_STATIC=ON \  ..
+cmake -DCMAKE_TOOLCHAIN_FILE="../../depends/ps3build.cmake" -DCMAKE_BUILD_TYPE=Release  ..
 cmake --build . 
 cmake --install .
