@@ -62,7 +62,7 @@ set(SDLMIXER_WAVPACK           OFF)
 set(SDLMIXER_FLAC              OFF)
 set(SDLMIXER_MP3_MPG123        OFF)
 set(SDLMIXER_GME               OFF)
-set(DSDLMIXER_MIDI_TIMIDITY    OFF)
+set(SDLMIXER_MIDI_TIMIDITY     OFF)
 
 # SDL3_ttf
 set(SDLTTF_VENDORED             ON)
